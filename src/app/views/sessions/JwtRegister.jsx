@@ -5,8 +5,6 @@ import {
   TextField,
   Button,
   Autocomplete,
-  FormControlLabel,
-  Checkbox,
   MenuItem,
   Select,
   InputLabel,
@@ -15,7 +13,7 @@ import {
 import { useTheme } from '@emotion/react';
 import { Box, styled } from '@mui/material';
 import useAuth from 'app/hooks/useAuth';
-import { Form, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { obtenerEPS } from '../../api/eps.ts';
 import { obtenerRol } from '../../api/rol.ts';
 import { obtenerFichas } from '../../api/fichas.ts';
@@ -91,13 +89,10 @@ const JwtRegister = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === 'eps' || name === 'rol') {
-      setFormData({ ...formData, [name]: value });
-    } else if (name == 'ficha') {
-      setFormData({ ...formData, [name]: value });
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -106,10 +101,42 @@ const JwtRegister = () => {
 
     try {
       const response = await register(formData);
+      console.log(response);
     } catch (error) {
       console.error('Error al registrar:', error);
     }
   };
+
+  const generoOptions = [
+    { value: 'seleccion', label: 'Seleccione' },
+    { value: 'masculino', label: 'Masculino' },
+    { value: 'femenino', label: 'Femenino' },
+    { value: 'no_aporta', label: 'No aporta' },
+  ];
+
+  const tipoDocumentoOptions = [
+ { value: 'Seleccione', label: 'Seleccione' },
+    { value: 'T.I', label: 'Tarjeta de identidad' },
+    { value: 'C.C', label: 'Cédula' },
+    { value: 'dni', label: 'DNI (Documento Nacional de Identidad)' },
+    { value: 'licencia', label: 'Licencia de Conducir' },
+    { value: 'rut', label: 'RUT (Registro Único Tributario)' },
+    { value: 'paspextranjero', label: 'Pasaporte de Extranjería' },
+    { value: 'otro', label: 'Otro documento' },
+  ];
+
+  const tipoSangreOptions = [
+    { value: 'Seleccione', label: 'Seleccione' },
+    { value: 'O+', label: 'O+' },
+    { value: 'O-', label: 'O-' },
+    { value: 'A+', label: 'A+' },
+    { value: 'A-', label: 'A-' },
+    { value: 'B+', label: 'B+' },
+    { value: 'B-', label: 'B-' },
+    { value: 'AB+', label: 'AB+' },
+    { value: 'AB-', label: 'AB-' },
+    { value: 'no_sabe', label: 'No sabe/no está seguro' },
+  ];
 
   return (
     <JWTRegister>
@@ -158,22 +185,34 @@ const JwtRegister = () => {
                     ))}
                   </Select>
                 </FormControl>
-                <TextField
-                  label="Género"
-                  fullWidth
+                <InputLabel htmlFor="genero">Género</InputLabel>
+                <Select
+                  id="genero"
                   name="genero"
+                  fullWidth
                   value={formData.genero}
                   onChange={handleChange}
-                  margin="normal"
-                />
-                <TextField
-                  label="Tipo de Documento"
-                  fullWidth
+                >
+                  {generoOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <InputLabel htmlFor="tipo_doc">Tipo de Documento</InputLabel>
+                <Select
+                  id="tipo_doc"
                   name="tipo_doc"
+                  fullWidth
                   value={formData.tipo_doc}
                   onChange={handleChange}
-                  margin="normal"
-                />
+                >
+                  {tipoDocumentoOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
                 <TextField
                   label="Número de Documento"
                   fullWidth
@@ -241,21 +280,27 @@ const JwtRegister = () => {
                       label: option.codigo,
                       key: `ficha-option-${option._id}`,
                     }))}
-                    onChange={handleChange}
+                    onChange={(_, value) => setFormData((prevData) => ({ ...prevData, ficha: value }))}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth margin="normal" />
                     )}
                   />
                 </FormControl>  
 
-                <TextField
-                  label="RH"
-                  fullWidth
+                <InputLabel htmlFor="rh">Tipo de Sangre</InputLabel>
+                <Select
+                  id="rh"
                   name="rh"
+                  fullWidth
                   value={formData.rh}
                   onChange={handleChange}
-                  margin="normal"
-                />
+                >
+                  {tipoSangreOptions.map((option) => (
+                    <MenuItem key={`tipo_sangre-option-${option.value}`} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
                 <TextField
                   label="Dirección"
                   fullWidth
