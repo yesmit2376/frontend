@@ -18,6 +18,8 @@ const Analytics = Loadable(lazy(() => import('app/views/dashboard/Analytics')));
 const Prestamos = Loadable(lazy(() => import('app/views/prestamo/prestamo')));
 const IMPLEMENTO = Loadable(lazy(() => import('app/views/implementos/implementos')));
 const Lista = Loadable(lazy(() => import('app/views/prestamo/listar')));
+const Activation = Loadable(lazy(() => import('app/views/sessions/activacion')));
+
 const isAuthenticated = () => {
   const token = localStorage.getItem('token');
   return !!token;
@@ -70,6 +72,7 @@ const routes = [
   // session pages route
   { path: '/session/404', element: <NotFound /> },
   { path: '/session/signin', element: <JwtLogin /> },
+  { path: '/session/activation', element: <Activation />},
   { path: '/session/signup', element: <JwtRegister /> },
   { path: '/session/forgot-password', element: <ForgotPassword /> },
   { path: '/', element: <Navigate to="/session/signin" /> },

@@ -27,7 +27,7 @@ const ForgotPasswordRoot = styled(JustifyBox)(() => ({
   },
 }));
 
-const ForgotPassword = () => {
+const Activation = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
@@ -35,7 +35,7 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      const response = await restablecer({ correo: email });
+      const response = await restablecer({ codigo: email });
       console.log(response);
       navigate('/'); 
     } catch (error) {
@@ -55,10 +55,10 @@ const ForgotPassword = () => {
             <ContentBox>
               <form onSubmit={handleFormSubmit}>
                 <TextField
-                  type="email"
+                  type="string"
                   name="email"
                   size="small"
-                  label="Email"
+                  label="Ingresa el codigo que llego al correo sena"
                   variant="outlined"
                   sx={{ mb: 3, width: '100%' }}
                   value={email}
@@ -66,17 +66,17 @@ const ForgotPassword = () => {
                 />
 
                 <Button fullWidth variant="contained" color="primary" type="submit">
-                  Reset Password
+                  Activar cuenta
                 </Button>
 
                 <Button
                   fullWidth
                   color="primary"
                   variant="outlined"
-                  onClick={() => navigate(-1)}
+                  onClick={() => navigate("/session/signin")}
                   sx={{ mt: 2 }}
                 >
-                  Go Back
+                  Login
                 </Button>
               </form>
             </ContentBox>
@@ -87,4 +87,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default Activation;

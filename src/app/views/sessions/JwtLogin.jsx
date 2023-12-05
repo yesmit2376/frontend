@@ -153,7 +153,17 @@ return (
                       >
                         Register
                       </NavLink>
-                    </Paragraph>
+                  </Paragraph>
+
+                  <Paragraph>
+                    Ya estas registrado activa tu cuenta:
+                    <NavLink
+                      to="/session/activation"
+                      style={{ color: theme.palette.primary.main }}
+                    >
+                      aqui
+                    </NavLink>
+                  </Paragraph>
                   </form>
                 )}
               </Formik>

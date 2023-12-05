@@ -1,4 +1,3 @@
-// registro.js
 interface Register {
     nombres: string;
     apellidos: string;
@@ -13,12 +12,13 @@ interface Register {
     telefono: string;
     ficha?: string;
     rh?: string;
-    direccion: string; 
+    direccion: string;
     pps: boolean;
     token?: string;
     contrasena: string;
     activacion: boolean;
 }
+
 export const register = async (usuario: Register) => {
     try {
         console.log('Datos enviados:', JSON.stringify(usuario));
@@ -31,7 +31,17 @@ export const register = async (usuario: Register) => {
             body: JSON.stringify(usuario),
         });
 
-        // ... (resto del código) ...
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Respuesta del servidor:', data);
+
+            // Handle the response data or return it, as needed
+            return data;
+        } else {
+            const errorData = await response.json();
+            console.error('Error en la respuesta del servidor:', errorData);
+            throw new Error('Error en la solicitud');
+        }
     } catch (error) {
         console.error('Error:', error);
         throw error;

@@ -10,10 +10,10 @@ import {
   InputLabel,
   FormControl,
 } from '@mui/material';
+
 import { useTheme } from '@emotion/react';
 import { Box, styled } from '@mui/material';
-import useAuth from 'app/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { obtenerEPS } from '../../api/eps.ts';
 import { obtenerRol } from '../../api/rol.ts';
 import { obtenerFichas } from '../../api/fichas.ts';
@@ -41,7 +41,6 @@ const JWTRegister = styled(JustifyBox)(() => ({
 
 const JwtRegister = () => {
   const theme = useTheme();
-  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [epsOptions, setEpsOptions] = useState([]);
@@ -63,9 +62,9 @@ const JwtRegister = () => {
     ficha: '',
     rh: '',
     direccion: '',
-    pps: false,
+    pps: true,
     contrasena: '',
-    activacion: false,
+    activacion: true,
   });
 
   useEffect(() => {
@@ -89,19 +88,23 @@ const JwtRegister = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    if (name === 'eps' || name === 'rol') {
+      setFormData({ ...formData, [name]: value });
+    } else if (name === 'ficha') {
+      setFormData({ ...formData, [name]: value.value });
+    }  else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(formData);
+    console.log('Form Data:', formData);
 
     try {
       const response = await register(formData);
-      console.log(response);
+      console.log('API Response:', response);
+      navigate('/'); 
     } catch (error) {
       console.error('Error al registrar:', error);
     }
@@ -151,9 +154,12 @@ const JwtRegister = () => {
               />
             </ContentBox>
           </Grid>
+
           <Grid item sm={6} xs={12}>
             <ContentBox>
               <form onSubmit={handleSubmit}>
+
+                
                 <TextField
                   label="Nombres"
                   fullWidth
@@ -280,12 +286,13 @@ const JwtRegister = () => {
                       label: option.codigo,
                       key: `ficha-option-${option._id}`,
                     }))}
-                    onChange={(_, value) => setFormData((prevData) => ({ ...prevData, ficha: value }))}
+                    onChange={(_, value) => setFormData((prevData) => ({ ...prevData, ficha: value?.value || '' }))}
                     renderInput={(params) => (
                       <TextField {...params} fullWidth margin="normal" />
                     )}
                   />
-                </FormControl>  
+                </FormControl>
+ 
 
                 <InputLabel htmlFor="rh">Tipo de Sangre</InputLabel>
                 <Select
